@@ -70,8 +70,6 @@ def is_valid_image_url(url):
 def display_image_from_url(image_url):
     if image_url:
         st.image(image_url, caption='이미지', use_column_width=True)
-        # 이미지 클릭 시 확대 가능한 링크 생성
-        st.markdown(f"[이미지 확대 보기]({image_url})")
     else:
         st.write('이미지가 없습니다.')
 
@@ -146,9 +144,23 @@ def app2():
         # 조회된 값을 text_input에 표시
         tab1_input1 = st.text_input('조회된 값 (Content1):', key='selected_user_input1_tab1', value=st.session_state.get('selected_entry_content1', ''))
         tab1_input2 = st.text_input('조회된 값 (Content2):', key='selected_user_input2_tab1', value=st.session_state.get('selected_entry_content2', ''))
-        tab1_input3 = st.text_input('조회된 값 (이미지 URL):', key='selected_user_input3_tab1', value=st.session_state.get('selected_entry_image_url', ''))
-        tab1_input4 = st.text_input('조회된 값 (PPT URL):', key='selected_user_input4_tab1', value=st.session_state.get('selected_entry_ppt_url', ''))
         
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            tab1_input3 = st.text_input('조회된 값 (이미지 URL):', key='selected_user_input3_tab1', value=st.session_state.get('selected_entry_image_url', ''))
+        with col2:
+            image_url = st.session_state.get('selected_entry_image_url', '')
+            if image_url:
+                st.markdown(f"[이미지 확대 보기]({image_url})")
+
+        col3, col4 = st.columns([4, 1])
+        with col3:
+            tab1_input4 = st.text_input('조회된 값 (PPT URL):', key='selected_user_input4_tab1', value=st.session_state.get('selected_entry_ppt_url', ''))
+        with col4:
+            ppt_url = st.session_state.get('selected_entry_ppt_url', '')
+            if ppt_url:
+                st.markdown(f"[PPT 링크 열기]({ppt_url})")
+
         # 수정 버튼 추가
         if st.button("수정"):
             update_entry(tab1_input1, tab1_input2, tab1_input3, tab1_input4)
@@ -163,4 +175,4 @@ def app2():
         st.header("Tab2")
 
 # if __name__ == "__main__":
-#     app()
+#     app2()
