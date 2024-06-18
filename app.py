@@ -1,6 +1,5 @@
 import streamlit as st
 from pages.traffic1 import traffic1
-from pages.traffic2 import app
 from pages.test import app2
 
 def main():
