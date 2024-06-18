@@ -1,0 +1,6 @@
+streamlit
+altair
+xlwings
+pandas
+requests
+google-cloud-storage
