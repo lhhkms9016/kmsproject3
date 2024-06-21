@@ -136,7 +136,15 @@ def data_editor_with_db(df, key_prefix):
                          row['Image URL8'], row['PPT URL8'], row['Image URL9'], row['PPT URL9'], row['Image URL10'], row['PPT URL10'])  
         st.success("데이터가 성공적으로 데이터베이스에 저장되었습니다.")
 
-
+# 데이터베이스에서 모든 항목 조회 함수
+def get_all_entries():
+    conn = sqlite3.connect('example.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM entries")
+    rows = c.fetchall()
+    conn.close()
+    return rows
+    
 # Streamlit 앱 메인 함수
 def app2():
     st.title('제안목차')
