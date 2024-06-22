@@ -9,6 +9,12 @@ from pptx import Presentation
 from pptx.util import Inches
 import shutil
 
+# static 디렉터리 경로 설정
+static_dir = os.path.join(os.path.dirname(__file__), 'static')
+    
+if not os.path.exists(static_dir):
+    os.makedirs(static_dir)
+
 # 데이터베이스 초기화 함수
 def init_db():
     conn = sqlite3.connect('example.db')
