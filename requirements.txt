@@ -6,3 +6,4 @@ requests
 google-cloud-storage
 fitz
 frontend
+PyMuPDF
