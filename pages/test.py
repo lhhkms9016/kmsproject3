@@ -5,9 +5,6 @@ import pandas as pd
 import requests
 import os
 import zipfile
-from pptx import Presentation
-from pptx.util import Inches
-import shutil
 
 # static 디렉터리 경로 설정
 static_dir = os.path.join(os.path.dirname(__file__), 'static')
