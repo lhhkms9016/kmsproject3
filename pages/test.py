@@ -1,7 +1,13 @@
+import fitz  # PyMuPDF 라이브러리
 import streamlit as st
 import sqlite3
 import pandas as pd
 import requests
+import os
+import zipfile
+from pptx import Presentation
+from pptx.util import Inches
+import shutil
 
 # 데이터베이스 초기화 함수
 def init_db():
@@ -61,18 +67,21 @@ def clear_table():
     conn.close()
 
 # 데이터베이스에서 조건에 맞는 항목 조회 함수
-def get_matching_entries(content11, content12, content13, content14, keyword):
+def get_matching_entries(content1, content6, content11, content12, content13, content14, keyword):
     conn = sqlite3.connect('example.db')
     c = conn.cursor()
     query = """
     SELECT * FROM entries 
-    WHERE content11 LIKE ? 
+    WHERE content1 LIKE ? 
+    AND content6 LIKE ?
+    AND content11 LIKE ? 
     AND content12 LIKE ? 
     AND content13 LIKE ? 
     AND content14 LIKE ? 
     AND (content11 LIKE ? OR content12 LIKE ? OR content13 LIKE ? OR content14 LIKE ? OR content15 LIKE ? OR content16 LIKE ?)
     """
-    c.execute(query, ('%' + content11 + '%', '%' + content12 + '%', '%' + content13 + '%', '%' + content14 + '%', 
+    c.execute(query, ('%' + content1 + '%', '%' + content6 + '%', '%' + content11 + '%', '%' + content12 + '%', 
+                      '%' + content13 + '%', '%' + content14 + '%', 
                       '%' + keyword + '%', '%' + keyword + '%', '%' + keyword + '%', '%' + keyword + '%', 
                       '%' + keyword + '%', '%' + keyword + '%'))
     rows = c.fetchall()
@@ -144,7 +153,66 @@ def get_all_entries():
     rows = c.fetchall()
     conn.close()
     return rows
+
+# 데이터베이스에 CSV 파일의 데이터를 추가하는 함수
+def upload_csv_to_db(uploaded_file):
+    df = pd.read_csv(uploaded_file)  # UploadedFile 객체를 DataFrame으로 변환
+    df.columns = [col.replace(" ", "_") for col in df.columns]  # 공백을 언더스코어로 변환
+
+    # content11부터 content16 컬럼의 공백을 '-'로 변환
+    for col in ['content11', 'content12', 'content13', 'content14', 'content15', 'content16']:
+        if col in df.columns:
+            df[col] = df[col].str.replace(" ", "-")
     
+    for index, row in df.iterrows():
+        insert_entry(row['Content1'], row['Content2'], row['Content3'], row['Content4'], row['Content5'], row['Content6'], 
+                     row['Content7'], row['Content8'], row['Content9'], row['Content10'], row['Content11'], row['Content12'], 
+                     row['Content13'], row['Content14'], row['Content15'], row['Content16'], row['Image_URL'], row['PPT_URL'], 
+                     row['Image_URL2'], row['PPT_URL2'], row['Image_URL3'], row['PPT_URL3'], row['Image_URL4'], row['PPT_URL4'], 
+                     row['Image_URL5'], row['PPT_URL5'], row['Image_URL6'], row['PPT_URL6'], row['Image_URL7'], row['PPT_URL7'], 
+                     row['Image_URL8'], row['PPT_URL8'], row['Image_URL9'], row['PPT_URL9'], row['Image_URL10'], row['PPT_URL10'])
+
+# PDF 분할 함수
+def split_pdf(input_path, output_folder):
+    # PDF 파일 열기
+    pdf_document = fitz.open(input_path)
+    
+    # 각 페이지 반복
+    for page_number in range(len(pdf_document)):
+        # 페이지 로드
+        page = pdf_document.load_page(page_number)
+        
+        # 빈 PDF 문서 생성
+        new_pdf = fitz.open()
+        new_pdf.insert_pdf(pdf_document, from_page=page_number, to_page=page_number)
+        
+        # 출력 파일 이름 정의
+        output_filename = os.path.join(output_folder, f"page_{page_number + 1}.pdf")
+        
+        # 페이지를 개별 PDF 파일로 저장
+        new_pdf.save(output_filename)
+        
+        # 새 PDF 문서 닫기
+        new_pdf.close()
+    
+    # 원본 PDF 문서 닫기
+    pdf_document.close()
+
+def merge_pdfs_in_folder(pdf_files, output_filename):
+    pdf_writer = fitz.open()
+    
+    for pdf_file in pdf_files:
+        pdf_reader = fitz.open(pdf_file)
+        pdf_writer.insert_pdf(pdf_reader)
+        pdf_reader.close()
+    
+    # Save the merged PDF to the output filename
+    pdf_writer.save(output_filename)
+    pdf_writer.close()
+
+
+
+
 # Streamlit 앱 메인 함수
 def app2():
     st.title('제안목차')
@@ -272,14 +340,16 @@ def app2():
         st.sidebar.header("조회 기능")
 
         keyword = st.sidebar.text_input('키워드:')
+        search_input1 = st.sidebar.text_input('조회할 값 (Content1):')  # Content1 조회 입력 필드 추가
+        search_input6 = st.sidebar.text_input('조회할 값 (Content6):')  # Content6 조회 입력 필드 추가
         search_input11 = st.sidebar.text_input('조회할 값 (Content11):')
         search_input12 = st.sidebar.text_input('조회할 값 (Content12):')
         search_input13 = st.sidebar.text_input('조회할 값 (Content13):')
         search_input14 = st.sidebar.text_input('조회할 값 (Content14):')
 
         if st.sidebar.button('조회'):
-            if keyword or search_input11 or search_input12 or search_input13 or search_input14:
-                entries = get_matching_entries(search_input11, search_input12, search_input13, search_input14, keyword)
+            if keyword or search_input1 or search_input6 or search_input11 or search_input12 or search_input13 or search_input14:
+                entries = get_matching_entries(search_input1, search_input6, search_input11, search_input12, search_input13, search_input14, keyword)
                 if entries:
                     st.session_state.filtered_entries = entries
                     st.experimental_rerun()
@@ -555,5 +625,74 @@ def app2():
     with tabs[1]:
         st.header("Tab2")
 
-#if __name__ == "__main__":
+        with st.expander("Database 파일 업로드"):
+            # CSV 파일 업로드 UI
+            uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+            if uploaded_file is not None:
+                upload_csv_to_db(uploaded_file)
+                st.success("CSV 파일의 데이터가 성공적으로 데이터베이스에 추가되었습니다.")
+
+        # PDF 파일 병합 및 분할 UI
+        with st.expander("PDF 파일 병합"):
+            uploaded_pdfs = st.file_uploader("Upload PDFs", type=["pdf"], accept_multiple_files=True, key="pdf_merger")
+            if uploaded_pdfs is not None and len(uploaded_pdfs) > 1:
+                temp_dir = "temp"
+                os.makedirs(temp_dir, exist_ok=True)
+                temp_pdf_files = []
+
+                for uploaded_pdf in uploaded_pdfs:
+                    temp_pdf_path = os.path.join(temp_dir, uploaded_pdf.name)
+                    with open(temp_pdf_path, "wb") as f:
+                        f.write(uploaded_pdf.getbuffer())
+                    temp_pdf_files.append(temp_pdf_path)
+
+                output_filename = os.path.join(temp_dir, "merged.pdf")
+                merge_pdfs_in_folder(temp_pdf_files, output_filename)
+
+                # 병합된 파일 다운로드 링크 생성
+                with open(output_filename, "rb") as f:
+                    st.download_button(
+                        label="Download Merged PDF",
+                        data=f,
+                        file_name="merged.pdf",
+                        mime="application/pdf"
+                    )
+            else:
+                st.warning("Please upload at least two PDF files to merge.")
+
+        with st.expander("PDF 파일 분할"):
+            uploaded_pdf = st.file_uploader("Upload PDF", type=["pdf"], key="pdf_uploader")
+            if uploaded_pdf is not None:
+                input_path = os.path.join("temp", uploaded_pdf.name)
+                os.makedirs("temp", exist_ok=True)
+
+                with open(input_path, "wb") as f:
+                    f.write(uploaded_pdf.getbuffer())
+
+                output_folder = "output"
+                os.makedirs(output_folder, exist_ok=True)
+
+                split_pdf(input_path, output_folder)
+
+                # 압축 파일 생성
+                zip_filename = os.path.join("temp", "split_pdfs.zip")
+                with zipfile.ZipFile(zip_filename, 'w') as zipf:
+                    for page_number in range(len(fitz.open(input_path))):
+                        output_filename = os.path.join(output_folder, f"page_{page_number + 1}.pdf")
+                        zipf.write(output_filename, arcname=f"page_{page_number + 1}.pdf")
+
+                st.success("PDF 파일이 성공적으로 분할되고 압축되었습니다.")
+
+                # 압축된 파일 다운로드 링크 생성
+                with open(zip_filename, "rb") as f:
+                    st.download_button(
+                        label="Download split PDF files as ZIP",
+                        data=f,
+                        file_name="split_pdfs.zip",
+                        mime="application/zip"
+                    )
+
+
+
+# if __name__ == "__main__":
 #    app2()
