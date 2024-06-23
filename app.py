@@ -1,6 +1,7 @@
 import streamlit as st
 from pages.traffic1 import traffic1
 from pages.test import app2
+from pages.home import home
 
 def main():
 
@@ -17,7 +18,7 @@ def main():
 
     # 선택된 페이지에 따라 다른 스크립트 실행
     if page == "Home":
-        st.write("여기는 메인 페이지입니다.")
+        home()
     elif page == "Traffic_1":
         traffic1()
     elif page == "제안목차":
