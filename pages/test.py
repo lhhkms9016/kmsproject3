@@ -8,7 +8,7 @@ import zipfile
 
 # static 디렉터리 경로 설정
 static_dir = os.path.join(os.path.dirname(__file__), 'static')
-    
+
 if not os.path.exists(static_dir):
     os.makedirs(static_dir)
 
@@ -22,15 +22,11 @@ def init_db():
                   content4 TEXT DEFAULT '0', content5 TEXT DEFAULT '0', content6 TEXT DEFAULT '0', 
                   content7 TEXT DEFAULT '0', content8 TEXT DEFAULT '0', content9 TEXT DEFAULT '0', 
                   content10 TEXT DEFAULT '0', content11 TEXT DEFAULT '0', content12 TEXT DEFAULT '0', 
-                  content13 TEXT DEFAULT '0', content14 TEXT DEFAULT '0', content15 TEXT DEFAULT '0', 
-                  content16 TEXT DEFAULT '0', 
-                  image_url TEXT DEFAULT '0', ppt_url TEXT DEFAULT '0', image_url2 TEXT DEFAULT '0', 
-                  ppt_url2 TEXT DEFAULT '0', image_url3 TEXT DEFAULT '0', ppt_url3 TEXT DEFAULT '0', 
-                  image_url4 TEXT DEFAULT '0', ppt_url4 TEXT DEFAULT '0', image_url5 TEXT DEFAULT '0', 
-                  ppt_url5 TEXT DEFAULT '0', image_url6 TEXT DEFAULT '0', ppt_url6 TEXT DEFAULT '0', 
-                  image_url7 TEXT DEFAULT '0', ppt_url7 TEXT DEFAULT '0', image_url8 TEXT DEFAULT '0', 
-                  ppt_url8 TEXT DEFAULT '0', image_url9 TEXT DEFAULT '0', ppt_url9 TEXT DEFAULT '0', 
-                  image_url10 TEXT DEFAULT '0', ppt_url10 TEXT DEFAULT '0'
+                  content13 TEXT DEFAULT '0', content14 TEXT DEFAULT '0', content15 TEXT DEFAULT '0', content16 TEXT DEFAULT '0', 
+                  image_url TEXT DEFAULT '0', image_url2 TEXT DEFAULT '0', image_url3 TEXT DEFAULT '0', image_url4 TEXT DEFAULT '0',  image_url5 TEXT DEFAULT '0', 
+                  image_url6 TEXT DEFAULT '0', image_url7 TEXT DEFAULT '0',image_url8 TEXT DEFAULT '0', image_url9 TEXT DEFAULT '0', image_url10 TEXT DEFAULT '0', 
+                  ppt_url TEXT DEFAULT '0', ppt_url2 TEXT DEFAULT '0', ppt_url3 TEXT DEFAULT '0', ppt_url4 TEXT DEFAULT '0', ppt_url5 TEXT DEFAULT '0', 
+                  ppt_url6 TEXT DEFAULT '0', ppt_url7 TEXT DEFAULT '0', ppt_url8 TEXT DEFAULT '0', ppt_url9 TEXT DEFAULT '0', ppt_url10 TEXT DEFAULT '0'
                  )''')
     conn.commit()
     conn.close()
@@ -39,25 +35,27 @@ def init_db():
 def insert_entry(content1, content2, content3, content4, content5, content6, 
                  content7, content8, content9, content10, content11, content12, 
                  content13, content14, content15, content16, 
-                 image_url, ppt_url, image_url2, ppt_url2, 
-                 image_url3, ppt_url3, image_url4, ppt_url4, image_url5, ppt_url5, 
-                 image_url6, ppt_url6, image_url7, ppt_url7, image_url8, ppt_url8, 
-                 image_url9, ppt_url9, image_url10, ppt_url10):
+                 image_url, image_url2, image_url3, image_url4, image_url5, 
+                 image_url6, image_url7, image_url8, image_url9, image_url10, 
+                 ppt_url, ppt_url2, ppt_url3, ppt_url4, ppt_url5, 
+                 ppt_url6, ppt_url7, ppt_url8, ppt_url9, ppt_url10):
     conn = sqlite3.connect('example.db')
     c = conn.cursor()
     c.execute('''INSERT INTO entries (content1, content2, content3, content4, content5, content6, 
              content7, content8, content9, content10, content11, content12, 
-             content13, content14, content15, content16, image_url, ppt_url, image_url2, ppt_url2, 
-             image_url3, ppt_url3, image_url4, ppt_url4, image_url5, ppt_url5, 
-             image_url6, ppt_url6, image_url7, ppt_url7, image_url8, ppt_url8, 
-             image_url9, ppt_url9, image_url10, ppt_url10) 
+             content13, content14, content15, content16, 
+             image_url, image_url2, image_url3, image_url4, image_url5, 
+             image_url6, image_url7, image_url8, image_url9, image_url10, 
+             ppt_url, ppt_url2, ppt_url3, ppt_url4, ppt_url5, 
+             ppt_url6, ppt_url7, ppt_url8, ppt_url9, ppt_url10) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
           (content1, content2, content3, content4, content5, content6, 
            content7, content8, content9, content10, content11, content12, 
-           content13, content14, content15, content16, image_url, ppt_url, image_url2, ppt_url2, 
-           image_url3, ppt_url3, image_url4, ppt_url4, image_url5, ppt_url5, 
-           image_url6, ppt_url6, image_url7, ppt_url7, image_url8, ppt_url8, 
-           image_url9, ppt_url9, image_url10, ppt_url10))
+           content13, content14, content15, content16, 
+           image_url, image_url2, image_url3, image_url4, image_url5, 
+           image_url6, image_url7, image_url8, image_url9, image_url10, 
+           ppt_url, ppt_url2, ppt_url3, ppt_url4, ppt_url5, 
+           ppt_url6, ppt_url7, ppt_url8, ppt_url9, ppt_url10))
     conn.commit()
     conn.close()
 
@@ -95,25 +93,24 @@ def get_matching_entries(content1, content6, content11, content12, content13, co
 def update_entry(content1, content2, content3, content4, content5, content6, 
                  content7, content8, content9, content10, content11, content12, 
                  content13, content14, content15, content16, 
-                 image_url, ppt_url, image_url2, ppt_url2, 
-                 image_url3, ppt_url3, image_url4, ppt_url4, image_url5, ppt_url5, 
-                 image_url6, ppt_url6, image_url7, ppt_url7, image_url8, ppt_url8, 
-                 image_url9, ppt_url9, image_url10, ppt_url10):  
+                 image_url, image_url2, image_url3, image_url4, image_url5, 
+                 image_url6, image_url7, image_url8, image_url9, image_url10, 
+                 ppt_url, ppt_url2, ppt_url3, ppt_url4, ppt_url5, 
+                 ppt_url6, ppt_url7, ppt_url8, ppt_url9, ppt_url10):  
     conn = sqlite3.connect('example.db')
     c = conn.cursor()
     c.execute("""UPDATE entries SET content2 = ?, content3 = ?, content4 = ?, content5 = ?, content6 = ?, 
                  content7 = ?, content8 = ?, content9 = ?, content10 = ?, content11 = ?, content12 = ?, 
-                 content13 = ?, content14 = ?, content15 = ?, content16 = ?, image_url = ?, ppt_url = ?, 
-                 image_url2 = ?, ppt_url2 = ?, image_url3 = ?, ppt_url3 = ?, image_url4 = ?, ppt_url4 = ?, 
-                 image_url5 = ?, ppt_url5 = ?, image_url6 = ?, ppt_url6 = ?, image_url7 = ?, ppt_url7 = ?, 
-                 image_url8 = ?, ppt_url8 = ?, image_url9 = ?, ppt_url9 = ?, image_url10 = ?, ppt_url10 = ? 
+                 content13 = ?, content14 = ?, content15 = ?, content16 = ?, image_url = ?, image_url2 = ?, 
+                 image_url3 = ?, image_url4 = ?, image_url5 = ?, image_url6 = ?, image_url7 = ?, image_url8 = ?, 
+                 image_url9 = ?, image_url10 = ?, ppt_url = ?, ppt_url2 = ?, ppt_url3 = ?, ppt_url4 = ?, 
+                 ppt_url5 = ?, ppt_url6 = ?, ppt_url7 = ?, ppt_url8 = ?, ppt_url9 = ?, ppt_url10 = ? 
                  WHERE content1 = ?""",  
               (content2, content3, content4, content5, content6, 
                content7, content8, content9, content10, content11, content12, 
-               content13, content14, content15, content16, image_url, ppt_url, image_url2, ppt_url2, 
-               image_url3, ppt_url3, image_url4, ppt_url4, image_url5, ppt_url5, 
-               image_url6, ppt_url6, image_url7, ppt_url7, image_url8, ppt_url8, 
-               image_url9, ppt_url9, image_url10, ppt_url10, content1))  
+               content13, content14, content15, content16, image_url, image_url2, image_url3, image_url4, 
+               image_url5, image_url6, image_url7, image_url8, image_url9, image_url10, 
+               ppt_url, ppt_url2, ppt_url3, ppt_url4, ppt_url5, ppt_url6, ppt_url7, ppt_url8, ppt_url9, ppt_url10, content1))  
     conn.commit()
     conn.close()
 
@@ -142,10 +139,10 @@ def data_editor_with_db(df, key_prefix):
         for index, row in df.iterrows():
             insert_entry(row['Content1'], row['Content2'], row['Content3'], row['Content4'], row['Content5'], row['Content6'], 
                          row['Content7'], row['Content8'], row['Content9'], row['Content10'], row['Content11'], row['Content12'], 
-                         row['Content13'], row['Content14'], row['Content15'], row['Content16'], row['Image URL'], row['PPT URL'], 
-                         row['Image URL2'], row['PPT URL2'], row['Image URL3'], row['PPT URL3'], row['Image URL4'], row['PPT URL4'], 
-                         row['Image URL5'], row['PPT URL5'], row['Image URL6'], row['PPT URL6'], row['Image URL7'], row['PPT URL7'], 
-                         row['Image URL8'], row['PPT URL8'], row['Image URL9'], row['PPT URL9'], row['Image URL10'], row['PPT URL10'])  
+                         row['Content13'], row['Content14'], row['Content15'], row['Content16'], row['Image URL'], row['Image URL2'], 
+                         row['Image URL3'], row['Image URL4'], row['Image URL5'], row['Image URL6'], row['Image URL7'], 
+                         row['Image URL8'], row['Image URL9'], row['Image URL10'], row['PPT URL'], row['PPT URL2'], row['PPT URL3'], 
+                         row['PPT URL4'], row['PPT URL5'], row['PPT URL6'], row['PPT URL7'], row['PPT URL8'], row['PPT URL9'], row['PPT URL10'])  
         st.success("데이터가 성공적으로 데이터베이스에 저장되었습니다.")
 
 # 데이터베이스에서 모든 항목 조회 함수
@@ -170,10 +167,10 @@ def upload_csv_to_db(uploaded_file):
     for index, row in df.iterrows():
         insert_entry(row['Content1'], row['Content2'], row['Content3'], row['Content4'], row['Content5'], row['Content6'], 
                      row['Content7'], row['Content8'], row['Content9'], row['Content10'], row['Content11'], row['Content12'], 
-                     row['Content13'], row['Content14'], row['Content15'], row['Content16'], row['Image_URL'], row['PPT_URL'], 
-                     row['Image_URL2'], row['PPT_URL2'], row['Image_URL3'], row['PPT_URL3'], row['Image_URL4'], row['PPT_URL4'], 
-                     row['Image_URL5'], row['PPT_URL5'], row['Image_URL6'], row['PPT_URL6'], row['Image_URL7'], row['PPT_URL7'], 
-                     row['Image_URL8'], row['PPT_URL8'], row['Image_URL9'], row['PPT_URL9'], row['Image_URL10'], row['PPT_URL10'])
+                     row['Content13'], row['Content14'], row['Content15'], row['Content16'], row['Image_URL'], row['Image_URL2'], 
+                     row['Image_URL3'], row['Image_URL4'], row['Image_URL5'], row['Image_URL6'], row['Image_URL7'], 
+                     row['Image_URL8'], row['Image_URL9'], row['Image_URL10'], row['PPT_URL'], row['PPT_URL2'], row['PPT_URL3'], 
+                     row['PPT_URL4'], row['PPT_URL5'], row['PPT_URL6'], row['PPT_URL7'], row['PPT_URL8'], row['PPT_URL9'], row['PPT_URL10'])
 
 # PDF 분할 함수
 def split_pdf(input_path, output_folder):
@@ -213,9 +210,6 @@ def merge_pdfs_in_folder(pdf_files, output_filename):
     pdf_writer.save(output_filename)
     pdf_writer.close()
 
-
-
-
 # Streamlit 앱 메인 함수
 def app2():
     st.title('제안목차')
@@ -239,23 +233,21 @@ def app2():
                                                                            'Content4', 'Content5', 'Content6', 'Content7', 
                                                                            'Content8', 'Content9', 'Content10', 'Content11', 
                                                                            'Content12', 'Content13', 'Content14', 'Content15', 
-                                                                           'Content16', 'Image URL', 'PPT URL', 'Image URL2', 
-                                                                           'PPT URL2', 'Image URL3', 'PPT URL3', 'Image URL4', 
-                                                                           'PPT URL4', 'Image URL5', 'PPT URL5', 'Image URL6', 
-                                                                           'PPT URL6', 'Image URL7', 'PPT URL7', 'Image URL8', 
-                                                                           'PPT URL8', 'Image URL9', 'PPT URL9', 'Image URL10', 
-                                                                           'PPT URL10'])  
+                                                                           'Content16', 'Image URL', 'Image URL2', 'Image URL3', 
+                                                                           'Image URL4', 'Image URL5', 'Image URL6', 'Image URL7', 
+                                                                           'Image URL8', 'Image URL9', 'Image URL10', 'PPT URL', 
+                                                                           'PPT URL2', 'PPT URL3', 'PPT URL4', 'PPT URL5', 
+                                                                           'PPT URL6', 'PPT URL7', 'PPT URL8', 'PPT URL9', 'PPT URL10'])  
         else:
             df = pd.DataFrame(st.session_state.all_entries, columns=['ID', 'Content1', 'Content2', 'Content3', 
                                                                       'Content4', 'Content5', 'Content6', 'Content7', 
                                                                       'Content8', 'Content9', 'Content10', 'Content11', 
                                                                       'Content12', 'Content13', 'Content14', 'Content15', 
-                                                                      'Content16', 'Image URL', 'PPT URL', 'Image URL2', 
-                                                                      'PPT URL2', 'Image URL3', 'PPT URL3', 'Image URL4', 
-                                                                      'PPT URL4', 'Image URL5', 'PPT URL5', 'Image URL6', 
-                                                                      'PPT URL6', 'Image URL7', 'PPT URL7', 'Image URL8', 
-                                                                      'PPT URL8', 'Image URL9', 'PPT URL9', 'Image URL10', 
-                                                                      'PPT URL10'])  
+                                                                      'Content16', 'Image URL', 'Image URL2', 'Image URL3', 
+                                                                      'Image URL4', 'Image URL5', 'Image URL6', 'Image URL7', 
+                                                                      'Image URL8', 'Image URL9', 'Image URL10', 'PPT URL', 
+                                                                      'PPT URL2', 'PPT URL3', 'PPT URL4', 'PPT URL5', 
+                                                                      'PPT URL6', 'PPT URL7', 'PPT URL8', 'PPT URL9', 'PPT URL10'])  
 
         with st.expander("데이터 테이블 보기", expanded=True):
             edited_df = st.data_editor(df, num_rows="dynamic", key="data_editor_tab1")
@@ -281,24 +273,24 @@ def app2():
                 st.session_state.selected_entry_content15 = selected_row['Content15']
                 st.session_state.selected_entry_content16 = selected_row['Content16']
                 st.session_state.selected_entry_image_url = selected_row['Image URL']
-                st.session_state.selected_entry_ppt_url = selected_row['PPT URL']
                 st.session_state.selected_entry_image_url2 = selected_row['Image URL2']
-                st.session_state.selected_entry_ppt_url2 = selected_row['PPT URL2']
                 st.session_state.selected_entry_image_url3 = selected_row['Image URL3']  
-                st.session_state.selected_entry_ppt_url3 = selected_row['PPT URL3']  
                 st.session_state.selected_entry_image_url4 = selected_row['Image URL4']  
-                st.session_state.selected_entry_ppt_url4 = selected_row['PPT URL4']  
                 st.session_state.selected_entry_image_url5 = selected_row['Image URL5']  
-                st.session_state.selected_entry_ppt_url5 = selected_row['PPT URL5']  
                 st.session_state.selected_entry_image_url6 = selected_row['Image URL6']  
-                st.session_state.selected_entry_ppt_url6 = selected_row['PPT URL6']  
                 st.session_state.selected_entry_image_url7 = selected_row['Image URL7']  
-                st.session_state.selected_entry_ppt_url7 = selected_row['PPT URL7']  
                 st.session_state.selected_entry_image_url8 = selected_row['Image URL8']  
-                st.session_state.selected_entry_ppt_url8 = selected_row['PPT URL8']  
                 st.session_state.selected_entry_image_url9 = selected_row['Image URL9']  
-                st.session_state.selected_entry_ppt_url9 = selected_row['PPT URL9']  
                 st.session_state.selected_entry_image_url10 = selected_row['Image URL10']  
+                st.session_state.selected_entry_ppt_url = selected_row['PPT URL']
+                st.session_state.selected_entry_ppt_url2 = selected_row['PPT URL2']
+                st.session_state.selected_entry_ppt_url3 = selected_row['PPT URL3']  
+                st.session_state.selected_entry_ppt_url4 = selected_row['PPT URL4']  
+                st.session_state.selected_entry_ppt_url5 = selected_row['PPT URL5']  
+                st.session_state.selected_entry_ppt_url6 = selected_row['PPT URL6']  
+                st.session_state.selected_entry_ppt_url7 = selected_row['PPT URL7']  
+                st.session_state.selected_entry_ppt_url8 = selected_row['PPT URL8']  
+                st.session_state.selected_entry_ppt_url9 = selected_row['PPT URL9']  
                 st.session_state.selected_entry_ppt_url10 = selected_row['PPT URL10']  
             else:
                 st.session_state.selected_entry_id = None
@@ -319,24 +311,24 @@ def app2():
                 st.session_state.selected_entry_content15 = None
                 st.session_state.selected_entry_content16 = None
                 st.session_state.selected_entry_image_url = None
-                st.session_state.selected_entry_ppt_url = None
                 st.session_state.selected_entry_image_url2 = None
-                st.session_state.selected_entry_ppt_url2 = None
                 st.session_state.selected_entry_image_url3 = None  
-                st.session_state.selected_entry_ppt_url3 = None  
                 st.session_state.selected_entry_image_url4 = None  
-                st.session_state.selected_entry_ppt_url4 = None  
                 st.session_state.selected_entry_image_url5 = None  
-                st.session_state.selected_entry_ppt_url5 = None  
                 st.session_state.selected_entry_image_url6 = None  
-                st.session_state.selected_entry_ppt_url6 = None  
                 st.session_state.selected_entry_image_url7 = None  
-                st.session_state.selected_entry_ppt_url7 = None  
                 st.session_state.selected_entry_image_url8 = None  
-                st.session_state.selected_entry_ppt_url8 = None  
                 st.session_state.selected_entry_image_url9 = None  
-                st.session_state.selected_entry_ppt_url9 = None  
                 st.session_state.selected_entry_image_url10 = None  
+                st.session_state.selected_entry_ppt_url = None
+                st.session_state.selected_entry_ppt_url2 = None
+                st.session_state.selected_entry_ppt_url3 = None  
+                st.session_state.selected_entry_ppt_url4 = None  
+                st.session_state.selected_entry_ppt_url5 = None  
+                st.session_state.selected_entry_ppt_url6 = None  
+                st.session_state.selected_entry_ppt_url7 = None  
+                st.session_state.selected_entry_ppt_url8 = None  
+                st.session_state.selected_entry_ppt_url9 = None  
                 st.session_state.selected_entry_ppt_url10 = None  
 
         # Sidebar input for searching
@@ -695,7 +687,5 @@ def app2():
                         mime="application/zip"
                     )
 
-
-
-# if __name__ == "__main__":
+#if __name__ == "__main__":
 #    app2()
